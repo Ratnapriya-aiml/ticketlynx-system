@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
@@ -306,11 +305,16 @@ const AdminDashboard = () => {
           <Tabs defaultValue="trending">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-semibold">Event Management</h2>
-              <TabsList>
-                <TabsTrigger value="trending">Trending</TabsTrigger>
-                <TabsTrigger value="recent">Recent</TabsTrigger>
-                <TabsTrigger value="all">All Events</TabsTrigger>
-              </TabsList>
+              <div className="flex items-center gap-3">
+                <TabsList>
+                  <TabsTrigger value="trending">Trending</TabsTrigger>
+                  <TabsTrigger value="recent">Recent</TabsTrigger>
+                  <TabsTrigger value="all">All Events</TabsTrigger>
+                </TabsList>
+                <Button variant="outline" size="sm" onClick={() => navigate('/manage-events')}>
+                  Manage All
+                </Button>
+              </div>
             </div>
             
             <TabsContent value="trending">
@@ -375,13 +379,15 @@ const AdminDashboard = () => {
               icon={<Calendar className="h-5 w-5" />}
               color="bg-gradient-to-br from-blue-500 to-blue-700"
               description="Add a new event to the system"
+              onClick={() => navigate('/create-event')}
             />
             
             <ActionCard 
-              title="Manage Bookings" 
+              title="Manage Events" 
               icon={<Ticket className="h-5 w-5" />}
               color="bg-gradient-to-br from-indigo-500 to-indigo-700"
               description="Review and manage ticket bookings"
+              onClick={() => navigate('/manage-events')}
             />
             
             <ActionCard 
@@ -389,6 +395,7 @@ const AdminDashboard = () => {
               icon={<LayoutDashboard className="h-5 w-5" />}
               color="bg-gradient-to-br from-cyan-500 to-cyan-700"
               description="In-depth analytics and reports"
+              onClick={() => {}}
             />
             
             <ActionCard 
@@ -396,6 +403,7 @@ const AdminDashboard = () => {
               icon={<Users className="h-5 w-5" />}
               color="bg-gradient-to-br from-violet-500 to-violet-700"
               description="Manage user accounts and permissions"
+              onClick={() => {}}
             />
           </div>
         </div>
@@ -521,12 +529,14 @@ const ActionCard = ({
   title, 
   description, 
   icon, 
-  color 
+  color,
+  onClick
 }: {
   title: string;
   description: string;
   icon: React.ReactNode;
   color: string;
+  onClick: () => void;
 }) => (
   <div className="glass-card rounded-xl overflow-hidden hover:ring-1 hover:ring-primary/50 transition-all duration-300 group">
     <div className={`h-1 ${color}`} />
@@ -536,7 +546,7 @@ const ActionCard = ({
       </div>
       <h3 className="text-lg font-medium mb-1">{title}</h3>
       <p className="text-sm text-muted-foreground mb-4">{description}</p>
-      <Button className="glass-button w-full">
+      <Button className="glass-button w-full" onClick={onClick}>
         Get Started
       </Button>
     </div>
@@ -544,3 +554,4 @@ const ActionCard = ({
 );
 
 export default AdminDashboard;
+

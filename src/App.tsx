@@ -11,6 +11,9 @@ import AdminDashboard from "./pages/AdminDashboard";
 import EventDetails from "./pages/EventDetails";
 import Payment from "./pages/Payment";
 import NotFound from "./pages/NotFound";
+import Calendar from "./pages/Calendar";
+import CreateEvent from "./pages/CreateEvent";
+import ManageEvents from "./pages/ManageEvents";
 
 // Create a client outside of the component to avoid re-initialization on re-renders
 const queryClient = new QueryClient();
@@ -29,6 +32,9 @@ function App() {
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/event/:id" element={<EventDetails />} />
             <Route path="/payment/:id" element={<Payment />} />
+            <Route path="/calendar" element={<Calendar />} />
+            <Route path="/create-event" element={<CreateEvent />} />
+            <Route path="/manage-events" element={<ManageEvents />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

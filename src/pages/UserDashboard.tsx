@@ -221,7 +221,12 @@ const UserDashboard = () => {
         <section className="mb-8 animate-fade-up delay-75">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-semibold">Browse Events</h2>
-            <Button variant="ghost" size="sm" className="flex items-center gap-2">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="flex items-center gap-2"
+              onClick={() => navigate('/calendar')}
+            >
               <Calendar className="h-4 w-4" />
               View Calendar
             </Button>
