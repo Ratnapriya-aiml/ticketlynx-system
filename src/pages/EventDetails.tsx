@@ -14,6 +14,7 @@ import {
   Clock, 
   CreditCard, 
   Info, 
+  Lock,
   MapPin, 
   Share, 
   Star, 
