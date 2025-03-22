@@ -195,17 +195,17 @@ const CalendarView = () => {
             onSelect={(newDate) => newDate && setDate(newDate)}
             className="rounded-md border"
             components={{
-              Day: ({ day, ...props }) => (
+              Day: ({ date, ...props }) => (
                 <Button 
                   variant="ghost" 
                   {...props}
                   className={`h-9 w-9 p-0 font-normal aria-selected:opacity-100 ${
-                    calendarEvents.find(e => isSameDay(e.date, day))?.events.length 
+                    calendarEvents.find(e => isSameDay(e.date, date))?.events.length 
                       ? 'bg-primary/10 hover:bg-primary/20 font-semibold' 
                       : ''
                   }`}
                 >
-                  {renderDay(day)}
+                  {renderDay(date)}
                 </Button>
               )
             }}
