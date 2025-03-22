@@ -32,6 +32,11 @@ const EventCard = ({ event, compact = false }: EventCardProps) => {
   const almostFull = percentageFilled >= 80;
   const isSoldOut = percentageFilled >= 100;
 
+  // Default image if none is provided
+  const imageUrl = event.image.startsWith('http') 
+    ? event.image 
+    : `/images/${event.image}`;
+
   return (
     <div 
       className={`glass-card rounded-xl overflow-hidden transition-all duration-500 animate-fade-up group ${
@@ -42,11 +47,16 @@ const EventCard = ({ event, compact = false }: EventCardProps) => {
     >
       <div className="relative h-40 overflow-hidden">
         <img 
-          src={event.image} 
+          src={imageUrl} 
           alt={event.title}
           className={`w-full h-full object-cover transition-transform duration-700 ${
             isHovered ? 'scale-110' : 'scale-100'
           }`}
+          onError={(e) => {
+            // Fallback to a placeholder image if the event image fails to load
+            const target = e.target as HTMLImageElement;
+            target.src = 'https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80';
+          }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
         

@@ -9,6 +9,7 @@ import Index from "./pages/Index";
 import UserDashboard from "./pages/UserDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import EventDetails from "./pages/EventDetails";
+import Payment from "./pages/Payment";
 import NotFound from "./pages/NotFound";
 
 // Create a client outside of the component to avoid re-initialization on re-renders
@@ -27,6 +28,7 @@ function App() {
             <Route path="/dashboard" element={<UserDashboard />} />
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/event/:id" element={<EventDetails />} />
+            <Route path="/payment/:id" element={<Payment />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

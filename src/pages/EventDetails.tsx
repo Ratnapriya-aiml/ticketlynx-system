@@ -1,18 +1,15 @@
-
 import { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import { toast } from "sonner";
 import Navbar from '@/components/Navbar';
 import EventCard, { EventType } from '@/components/EventCard';
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { 
   ArrowLeft, 
   Calendar, 
   Clock, 
-  CreditCard, 
   Info, 
   Lock,
   MapPin, 
@@ -28,7 +25,6 @@ const EventDetails = () => {
   const [event, setEvent] = useState<EventType | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
-  const [paymentStep, setPaymentStep] = useState(0);
   const [similarEvents, setSimilarEvents] = useState<EventType[]>([]);
   
   useEffect(() => {
@@ -49,7 +45,7 @@ const EventDetails = () => {
         time: '9:00 AM - 5:00 PM',
         location: 'Convention Center, San Francisco',
         category: 'Conferences',
-        image: '/conference.jpg',
+        image: 'https://images.unsplash.com/photo-1505373877841-8d25f7d46678?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1600&q=80',
         price: 199,
         attendees: 380,
         maxAttendees: 400,
@@ -65,7 +61,7 @@ const EventDetails = () => {
           time: '9:00 AM - 6:00 PM',
           location: 'Tech Center, Seattle',
           category: 'Conferences',
-          image: '/conference.jpg',
+          image: 'https://images.unsplash.com/photo-1591115765373-5207764f72e4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80',
           price: 249,
           attendees: 300,
           maxAttendees: 350,
@@ -79,7 +75,7 @@ const EventDetails = () => {
           time: '10:00 AM - 4:00 PM',
           location: 'Design Hub, Chicago',
           category: 'Conferences',
-          image: '/conference.jpg',
+          image: 'https://images.unsplash.com/photo-1551818255-e6e10975bc17?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1728&q=80',
           price: 179,
           attendees: 180,
           maxAttendees: 200,
@@ -92,7 +88,7 @@ const EventDetails = () => {
           time: '9:00 AM - 5:00 PM',
           location: 'Business Center, Los Angeles',
           category: 'Conferences',
-          image: '/conference.jpg',
+          image: 'https://images.unsplash.com/photo-1523580494863-6f3031224c94?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80',
           price: 159,
           attendees: 290,
           maxAttendees: 300,
@@ -120,20 +116,15 @@ const EventDetails = () => {
     }
   };
   
-  const handlePayment = () => {
-    if (paymentStep === 0) {
-      setPaymentStep(1);
-      return;
-    }
-    
-    if (paymentStep === 1) {
-      setPaymentStep(2);
-      
-      // Simulate payment processing
-      setTimeout(() => {
-        toast.success('Payment successful! Tickets have been booked.');
-        navigate('/dashboard');
-      }, 2000);
+  const proceedToPayment = () => {
+    if (event) {
+      // Navigate to the payment page with event and quantity information
+      navigate(`/payment/${event.id}`, { 
+        state: { 
+          event: event,
+          quantity: quantity
+        } 
+      });
     }
   };
   
@@ -223,6 +214,10 @@ const EventDetails = () => {
                   src={event.image} 
                   alt={event.title}
                   className="w-full h-full object-cover"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = 'https://images.unsplash.com/photo-1505373877841-8d25f7d46678?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1600&q=80';
+                  }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                 
@@ -363,211 +358,96 @@ const EventDetails = () => {
           
           {/* Booking Column */}
           <div className="animate-fade-up delay-150">
-            {paymentStep === 0 && (
-              <div className="glass-card rounded-xl p-6 sticky top-24">
-                <h2 className="text-xl font-semibold mb-4">Book Tickets</h2>
-                
-                <div className="space-y-6">
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <p className="text-lg font-medium">${event.price}</p>
-                      <div className="flex items-center gap-1 text-sm">
-                        <Users className="h-4 w-4" />
-                        <span>
-                          {availableTickets} {availableTickets === 1 ? 'ticket' : 'tickets'} left
-                        </span>
-                      </div>
-                    </div>
-                    
-                    <Progress value={event.attendees / event.maxAttendees * 100} className="h-1" />
-                    
-                    {availableTickets < 20 && (
-                      <p className="text-sm text-yellow-500 flex items-center gap-1">
-                        <Info className="h-4 w-4" />
-                        {availableTickets < 10 
-                          ? 'Almost sold out! Get your tickets now.' 
-                          : 'Selling fast! Limited tickets available.'}
-                      </p>
-                    )}
-                  </div>
-                  
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium">Quantity</span>
-                      <div className="flex items-center">
-                        <Button 
-                          variant="outline" 
-                          size="icon" 
-                          className="h-8 w-8 rounded-r-none"
-                          onClick={decrementQuantity}
-                          disabled={quantity <= 1 || isSoldOut}
-                        >
-                          -
-                        </Button>
-                        <div className="h-8 px-3 flex items-center justify-center border border-x-0 border-input">
-                          {quantity}
-                        </div>
-                        <Button 
-                          variant="outline" 
-                          size="icon" 
-                          className="h-8 w-8 rounded-l-none"
-                          onClick={incrementQuantity}
-                          disabled={quantity >= availableTickets || isSoldOut}
-                        >
-                          +
-                        </Button>
-                      </div>
-                    </div>
-                    
-                    <div className="space-y-1">
-                      <div className="flex justify-between text-sm">
-                        <span>Price ({quantity} {quantity === 1 ? 'ticket' : 'tickets'})</span>
-                        <span>${event.price * quantity}</span>
-                      </div>
-                      <div className="flex justify-between text-sm">
-                        <span>Service fee</span>
-                        <span>${Math.round(event.price * quantity * 0.05)}</span>
-                      </div>
-                      <Separator className="my-2" />
-                      <div className="flex justify-between font-medium">
-                        <span>Total</span>
-                        <span>${Math.round(event.price * quantity * 1.05)}</span>
-                      </div>
+            <div className="glass-card rounded-xl p-6 sticky top-24">
+              <h2 className="text-xl font-semibold mb-4">Book Tickets</h2>
+              
+              <div className="space-y-6">
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <p className="text-lg font-medium">${event.price}</p>
+                    <div className="flex items-center gap-1 text-sm">
+                      <Users className="h-4 w-4" />
+                      <span>
+                        {availableTickets} {availableTickets === 1 ? 'ticket' : 'tickets'} left
+                      </span>
                     </div>
                   </div>
                   
-                  <Button 
-                    className="w-full glass-button"
-                    disabled={isSoldOut}
-                    onClick={handlePayment}
-                  >
-                    {isSoldOut ? 'Sold Out' : 'Proceed to Payment'}
-                  </Button>
+                  <Progress value={event.attendees / event.maxAttendees * 100} className="h-1" />
                   
-                  <p className="text-xs text-muted-foreground text-center">
-                    By proceeding, you agree to our terms of service and cancellation policy.
-                  </p>
+                  {availableTickets < 20 && (
+                    <p className="text-sm text-yellow-500 flex items-center gap-1">
+                      <Info className="h-4 w-4" />
+                      {availableTickets < 10 
+                        ? 'Almost sold out! Get your tickets now.' 
+                        : 'Selling fast! Limited tickets available.'}
+                    </p>
+                  )}
                 </div>
-              </div>
-            )}
-            
-            {paymentStep === 1 && (
-              <div className="glass-card rounded-xl p-6 sticky top-24 animate-fade-in">
-                <h2 className="text-xl font-semibold mb-4">Payment Details</h2>
                 
-                <div className="space-y-6">
-                  <div className="space-y-4">
-                    <div className="space-y-2">
-                      <label htmlFor="cardName" className="text-sm font-medium">
-                        Cardholder Name
-                      </label>
-                      <Input id="cardName" placeholder="Enter cardholder name" />
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <label htmlFor="cardNumber" className="text-sm font-medium">
-                        Card Number
-                      </label>
-                      <div className="relative">
-                        <Input id="cardNumber" placeholder="1234 5678 9012 3456" />
-                        <CreditCard className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium">Quantity</span>
+                    <div className="flex items-center">
+                      <Button 
+                        variant="outline" 
+                        size="icon" 
+                        className="h-8 w-8 rounded-r-none"
+                        onClick={decrementQuantity}
+                        disabled={quantity <= 1 || isSoldOut}
+                      >
+                        -
+                      </Button>
+                      <div className="h-8 px-3 flex items-center justify-center border border-x-0 border-input">
+                        {quantity}
                       </div>
-                    </div>
-                    
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <label htmlFor="expiry" className="text-sm font-medium">
-                          Expiry Date
-                        </label>
-                        <Input id="expiry" placeholder="MM/YY" />
-                      </div>
-                      
-                      <div className="space-y-2">
-                        <label htmlFor="cvv" className="text-sm font-medium">
-                          CVV
-                        </label>
-                        <Input id="cvv" placeholder="123" />
-                      </div>
+                      <Button 
+                        variant="outline" 
+                        size="icon" 
+                        className="h-8 w-8 rounded-l-none"
+                        onClick={incrementQuantity}
+                        disabled={quantity >= availableTickets || isSoldOut}
+                      >
+                        +
+                      </Button>
                     </div>
                   </div>
                   
-                  <Separator />
-                  
-                  <div className="space-y-2">
+                  <div className="space-y-1">
                     <div className="flex justify-between text-sm">
-                      <span>Event</span>
-                      <span>{event.title}</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span>Date</span>
-                      <span>{event.date}</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span>Quantity</span>
-                      <span>{quantity} {quantity === 1 ? 'ticket' : 'tickets'}</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span>Subtotal</span>
-                      <span>${totalPrice}</span>
+                      <span>Price ({quantity} {quantity === 1 ? 'ticket' : 'tickets'})</span>
+                      <span>${event.price * quantity}</span>
                     </div>
                     <div className="flex justify-between text-sm">
                       <span>Service fee</span>
-                      <span>${Math.round(totalPrice * 0.05)}</span>
+                      <span>${Math.round(event.price * quantity * 0.05)}</span>
                     </div>
                     <Separator className="my-2" />
                     <div className="flex justify-between font-medium">
                       <span>Total</span>
-                      <span>${Math.round(totalPrice * 1.05)}</span>
+                      <span>${Math.round(event.price * quantity * 1.05)}</span>
                     </div>
                   </div>
-                  
-                  <div className="space-y-3">
-                    <Button 
-                      className="w-full glass-button"
-                      onClick={handlePayment}
-                    >
-                      Pay ${Math.round(totalPrice * 1.05)}
-                    </Button>
-                    
-                    <Button 
-                      variant="outline" 
-                      className="w-full"
-                      onClick={() => setPaymentStep(0)}
-                    >
-                      Back
-                    </Button>
-                  </div>
-                  
-                  <div className="text-xs text-muted-foreground text-center flex items-center justify-center gap-2">
-                    <Lock className="h-3 w-3" />
-                    <span>Secure payment processed by Stripe</span>
-                  </div>
                 </div>
-              </div>
-            )}
-            
-            {paymentStep === 2 && (
-              <div className="glass-card rounded-xl p-6 sticky top-24 animate-fade-in">
-                <div className="text-center py-8 space-y-4">
-                  <div className="inline-flex h-16 w-16 rounded-full bg-primary/10 items-center justify-center mb-4">
-                    <Ticket className="h-8 w-8 text-primary animate-pulse" />
-                  </div>
-                  
-                  <h2 className="text-xl font-semibold">Processing Your Payment</h2>
-                  <p className="text-muted-foreground">
-                    Please wait while we confirm your booking...
-                  </p>
-                  
-                  <div className="flex justify-center py-4">
-                    <div className="h-8 w-8 border-4 border-primary/30 border-t-primary rounded-full animate-spin"></div>
-                  </div>
-                  
-                  <p className="text-sm text-muted-foreground">
-                    Do not refresh or close this page.
-                  </p>
+                
+                <Button 
+                  className="w-full glass-button gradient-button-blue"
+                  disabled={isSoldOut}
+                  onClick={proceedToPayment}
+                >
+                  {isSoldOut ? 'Sold Out' : 'Proceed to Checkout'}
+                </Button>
+                
+                <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
+                  <Lock className="h-3 w-3" />
+                  <span>Secure checkout with 256-bit encryption</span>
                 </div>
+                
+                <p className="text-xs text-muted-foreground text-center">
+                  By proceeding, you agree to our terms of service and cancellation policy.
+                </p>
               </div>
-            )}
+            </div>
           </div>
         </div>
       </main>

@@ -33,7 +33,53 @@
     --input: 0 0% 15%;
     --ring: 211 100% 45%;
 
+    /* New color variants */
+    --purple: 265 89% 78%;
+    --purple-dark: 265 89% 58%;
+    --green: 142 76% 36%;
+    --green-light: 142 76% 66%;
+    --blue-light: 211 100% 65%;
+    --pink: 330 100% 70%;
+    --orange: 30 100% 60%;
+    --cyan: 180 100% 50%;
+    --yellow: 45 100% 60%;
+    --indigo: 240 100% 50%;
+    --teal: 180 100% 40%;
+
     --radius: 0.5rem;
+  }
+
+  /* Alternate color themes */
+  .theme-purple {
+    --primary: 265 89% 78%;
+    --primary-foreground: 0 0% 100%;
+    --accent: 265 89% 78%;
+    --accent-foreground: 0 0% 100%;
+    --ring: 265 89% 78%;
+  }
+
+  .theme-green {
+    --primary: 142 76% 36%;
+    --primary-foreground: 0 0% 100%;
+    --accent: 142 76% 36%;
+    --accent-foreground: 0 0% 100%;
+    --ring: 142 76% 36%;
+  }
+
+  .theme-pink {
+    --primary: 330 100% 70%;
+    --primary-foreground: 0 0% 100%;
+    --accent: 330 100% 70%;
+    --accent-foreground: 0 0% 100%;
+    --ring: 330 100% 70%;
+  }
+
+  .theme-orange {
+    --primary: 30 100% 60%;
+    --primary-foreground: 0 0% 100%;
+    --accent: 30 100% 60%;
+    --accent-foreground: 0 0% 100%;
+    --ring: 30 100% 60%;
   }
 }
 
@@ -59,6 +105,57 @@
   
   .text-gradient {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-600;
+  }
+
+  /* New gradient text utilities with different color schemes */
+  .text-gradient-purple {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600;
+  }
+  
+  .text-gradient-green {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-teal-500;
+  }
+  
+  .text-gradient-sunset {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-orange-500 to-pink-500;
+  }
+
+  /* New gradient button utilities */
+  .gradient-button-blue {
+    @apply bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700;
+  }
+  
+  .gradient-button-purple {
+    @apply bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600;
+  }
+  
+  .gradient-button-green {
+    @apply bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600;
+  }
+  
+  .gradient-button-orange {
+    @apply bg-gradient-to-r from-orange-400 to-pink-500 hover:from-orange-500 hover:to-pink-600;
+  }
+
+  /* Card variants with different color accents */
+  .card-accent-purple {
+    @apply border-l-4 border-l-purple;
+  }
+  
+  .card-accent-green {
+    @apply border-l-4 border-l-green;
+  }
+  
+  .card-accent-blue {
+    @apply border-l-4 border-l-primary;
+  }
+  
+  .card-accent-pink {
+    @apply border-l-4 border-l-pink;
+  }
+  
+  .card-accent-orange {
+    @apply border-l-4 border-l-orange;
   }
 }
 
@@ -89,4 +186,30 @@ html {
 }
 .delay-500 {
   animation-delay: 500ms;
+}
+
+/* Enhanced animation utilities */
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { 
+    opacity: 1;
+    box-shadow: 0 0 0 0 rgba(var(--primary), 0.7);
+  }
+  50% { 
+    opacity: 0.8;
+    box-shadow: 0 0 20px 0 rgba(var(--primary), 0.3);
+  }
 }
